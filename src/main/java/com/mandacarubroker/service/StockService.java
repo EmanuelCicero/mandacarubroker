@@ -13,7 +13,6 @@ import java.util.Set;
 @Service
 public class StockService {
 
-
     private final StockRepository stockRepository;
 
     public StockService(StockRepository stockRepository) {
@@ -29,23 +28,20 @@ public class StockService {
     }
 
     public Stock createStock(RequestStockDTO data) {
-        Stock novaAcao = new Stock(data);
+        Stock newAction = new Stock(data);
         validateRequestStockDTO(data);
-        return stockRepository.save(novaAcao);
+        return stockRepository.save(newAction);
     }
 
     public Optional<Stock> updateStock(String id, Stock updatedStock) {
         return stockRepository.findById(id)
-                .map(stock -> {
-                    stock.setSymbol(updatedStock.getSymbol());
-                    stock.setCompanyName(updatedStock.getCompanyName());
-                    double newPrice = stock.changePrice(updatedStock.getPrice(), true);
-                    stock.setPrice(newPrice);
-
-                    return stockRepository.save(stock);
-                });
+            .map(stock -> {
+                stock.setSymbol(updatedStock.getSymbol());
+                stock.setCompanyName(updatedStock.getCompanyName());
+                stock.setPrice(updatedStock.getPrice());
+                return stockRepository.save(stock);
+            });
     }
-
     public void deleteStock(String id) {
         stockRepository.deleteById(id);
     }
@@ -57,21 +53,11 @@ public class StockService {
 
         if (!violations.isEmpty()) {
             StringBuilder errorMessage = new StringBuilder("Validation failed. Details: ");
-
             for (ConstraintViolation<RequestStockDTO> violation : violations) {
                 errorMessage.append(String.format("[%s: %s], ", violation.getPropertyPath(), violation.getMessage()));
             }
-
             errorMessage.delete(errorMessage.length() - 2, errorMessage.length());
-
             throw new ConstraintViolationException(errorMessage.toString(), violations);
         }
-    }
-
-    public void validateAndCreateStock(RequestStockDTO data) {
-        validateRequestStockDTO(data);
-
-        Stock novaAcao = new Stock(data);
-        stockRepository.save(novaAcao);
     }
 }
