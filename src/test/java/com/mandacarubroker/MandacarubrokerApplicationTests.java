@@ -49,7 +49,7 @@ class MandacarubrokerApplicationTests {
 		when(stockService.getAllStocks()).thenReturn(stocks);
 		stockController.getAllStocks();
 
-		Assertions.assertEquals(stocks.size(),stocks.size());
+		Assertions.assertEquals(2,stocks.size());
 	}
 
 }
