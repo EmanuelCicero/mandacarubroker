@@ -22,8 +22,6 @@ class MandacarubrokerApplicationTests {
 	@Mock
 	private StockService stockService;
 
-	@InjectMocks
-	private StockController stockController;
 
 	@BeforeEach
 	public void setUp() {
